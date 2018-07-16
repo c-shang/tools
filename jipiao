@@ -68,9 +68,9 @@ def _format_addr(s):
     name, addr = parseaddr(s)
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
-from_addr = 'sch_0221@163.com'
-password = 'O84FbyUK'
-to_addr = '690420753@qq.com'
+from_addr = '****@163.com'
+password = '****'
+to_addr = '****@qq.com'
 smtp_server = 'smtp.163.com'
 
 
