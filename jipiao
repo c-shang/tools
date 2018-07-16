@@ -21,16 +21,16 @@ headers = {
 }
 
 hkgs = {
-    "GJ": "长龙航空",
-    "MU": "东方航空",
-    "NS": "河北航空",
-    "G5": "华夏航空",
-    "CZ": "南方航空",
-    "3U": "四川航空",
-    "MF": "厦门航空",
-    "CA": "中国国航",
-    "ZH": "深圳航空",
-    "HO": "吉祥航空"
+    "GJ":"长龙航空",
+    "MU":"东方航空",
+    "NS":"河北航空",
+    "G5":"华夏航空",
+    "CZ":"南方航空",
+    "3U":"四川航空",
+    "MF":"厦门航空",
+    "CA":"中国国航",
+    "ZH":"深圳航空",
+    "HO":"吉祥航空"
 }
 
 hz_xn_r = requests.get('http://flights.ctrip.com/domesticsearch/search/SearchFirstRouteFlights',params=hz_to_xn_params,headers=headers)
