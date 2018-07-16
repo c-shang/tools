@@ -59,9 +59,10 @@ for i in range(len(hz_xn_json['fis'])):
     dt = hz_xn_json['fis'][i]['dt']
     at = hz_xn_json['fis'][i]['at']
     lp = hz_xn_json['fis'][i]['lp']
-    line = 2000
+    line = 1000
     generate_tr(x,alc,dpbn,apbn,dt,at,lp,line)
 
+data_html = x.get_html_string()
 
 def _format_addr(s):
     name, addr = parseaddr(s)
@@ -72,9 +73,8 @@ password = 'O84FbyUK'
 to_addr = '690420753@qq.com'
 smtp_server = 'smtp.163.com'
 
-message = x
 
-msg = MIMEText(message, 'plain', 'utf-8')
+msg = MIMEText(data_html, 'html', 'utf-8')
 msg['From'] = _format_addr('发件人:<%s>' % from_addr)
 msg['To'] = _format_addr('<%s>' % to_addr)
 msg['Subject'] = Header('抢购机票了', 'utf-8').encode()
