@@ -3,6 +3,15 @@
 
 import requests
 import json
+from prettytable import PrettyTable
+
+from email import encoders
+from email.header import Header
+from email.mime.text import MIMEText
+from email.utils import parseaddr, formataddr
+
+import smtplib
+
 
 hz_to_xn_params = {
     'DCity1':'HGH',
@@ -36,9 +45,43 @@ hkgs = {
 hz_xn_r = requests.get('http://flights.ctrip.com/domesticsearch/search/SearchFirstRouteFlights',params=hz_to_xn_params,headers=headers)
 hz_xn_json = json.loads(hz_xn_r.text)
 
-def generate_tr(alc,dpbn,apbn,dt,at,lp,line):
+def generate_tr(x,alc,dpbn,apbn,dt,at,lp,line):
     if lp < line:
-        print("航空公司:{} 出发地:{} 到达地:{} 出发时间:{} 到达时间:{} 价格:{}".format(alc,dpbn,apbn,dt,at,lp))
+        x.add_row([alc,dpbn,apbn,dt,at,lp])
 
+x = PrettyTable(["航空公司","出发地","到达地","出发时间","到达时间","价格"])
+x.align["航空公司"] = "1"
+x.padding_width = 1
 for i in range(len(hz_xn_json['fis'])):
-    generate_tr(hkgs[hz_xn_json['fis'][i]['alc']],hz_xn_json['fis'][i]['dpbn'],hz_xn_json['fis'][i]['apbn'],hz_xn_json['fis'][i]['dt'],hz_xn_json['fis'][i]['at'],hz_xn_json['fis'][i]['lp'],2000)
+    alc = hkgs[hz_xn_json['fis'][i]['alc']]
+    dpbn = hz_xn_json['fis'][i]['dpbn']
+    apbn = hz_xn_json['fis'][i]['apbn']
+    dt = hz_xn_json['fis'][i]['dt']
+    at = hz_xn_json['fis'][i]['at']
+    lp = hz_xn_json['fis'][i]['lp']
+    line = 2000
+    generate_tr(x,alc,dpbn,apbn,dt,at,lp,line)
+
+
+def _format_addr(s):
+    name, addr = parseaddr(s)
+    return formataddr((Header(name, 'utf-8').encode(), addr))
+
+from_addr = 'sch_0221@163.com'
+password = 'O84FbyUK'
+to_addr = '690420753@qq.com'
+smtp_server = 'smtp.163.com'
+
+message = x
+
+msg = MIMEText(message, 'plain', 'utf-8')
+msg['From'] = _format_addr('发件人:<%s>' % from_addr)
+msg['To'] = _format_addr('<%s>' % to_addr)
+msg['Subject'] = Header('抢购机票了', 'utf-8').encode()
+
+server = smtplib.SMTP(smtp_server, 25)
+server.set_debuglevel(1)
+server.login(from_addr, password)
+server.sendmail(from_addr, [to_addr], msg.as_string())
+server.quit()
+
